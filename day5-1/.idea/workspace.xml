@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="915a25bf-2dbe-429d-9b66-2c9cc7c4d3f0" name="Changes" comment="" />
+    <list default="true" id="915a25bf-2dbe-429d-9b66-2c9cc7c4d3f0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../common/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../common/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../common/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../template/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../template/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,9 +20,9 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="7govpz09" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2VTfvD93D8LQdwsWVzE2VoKAXam" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -33,7 +37,11 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "E:/git/advent-of-code-2022/template/src"
+    "ignore.preview.features.used": "true",
+    "last_opened_file_path": "E:/git/advent-of-code-2022/common",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -74,5 +82,12 @@
       <updated>1694865218520</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="party.zonarius.advent2022.Main$Input" memberName="instructions" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>
