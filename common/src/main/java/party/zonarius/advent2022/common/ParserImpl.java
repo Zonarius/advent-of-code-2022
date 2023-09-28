@@ -37,7 +37,7 @@ public class ParserImpl<T> implements Parser<T> {
     @Override
     public ParseResult<T> parseResult(ParserInput input) {
         if (input.isEOF()) {
-            return new ParseResult.Failure("EOF", input).asResult();
+            return ParseResult.failure("EOF", input);
         }
         return parserFunc.apply(input);
     }
@@ -66,11 +66,11 @@ public class ParserImpl<T> implements Parser<T> {
     @Override
     public Parser<List<T>> splitBy(Parser<?> separator) {
         return Parser.seq(
-            this.followedBy(separator).plus(),
             this,
-            (list, last) -> Stream.concat(
-                list.stream(),
-                Stream.of(last)
+            separator.then(this).star(),
+            (first, rest) -> Stream.concat(
+                Stream.of(first),
+                rest.stream()
             ).toList()
         );
     }
@@ -87,6 +87,18 @@ public class ParserImpl<T> implements Parser<T> {
 
     @Override
     public Parser<List<T>> plus() {
+        return Parser.seq(
+            this,
+            this.star(),
+            (first, rest) -> Stream.concat(
+                Stream.of(first),
+                rest.stream()
+            ).toList()
+        );
+    }
+
+    @Override
+    public Parser<List<T>> star() {
         return Parser.create("(%s)+".formatted(name), input -> {
             List<T> results = new ArrayList<>();
             ParseResult.Failure failure = null;
@@ -99,11 +111,7 @@ public class ParserImpl<T> implements Parser<T> {
                     case ParseResult.Failure f -> failure = f;
                 }
             }
-            if (results.isEmpty()) {
-                return failure.asResult();
-            } else {
-                return ParseResult.success(results, input);
-            }
+            return ParseResult.success(results, input);
         });
     }
 

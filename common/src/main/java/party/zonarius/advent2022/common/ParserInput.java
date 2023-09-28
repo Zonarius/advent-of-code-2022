@@ -24,4 +24,8 @@ public record ParserInput(String input, int index) {
     public boolean isEOF() {
         return index >= input.length();
     }
+
+    public int indexOf(String substring) {
+        return input.indexOf(substring, index);
+    }
 }

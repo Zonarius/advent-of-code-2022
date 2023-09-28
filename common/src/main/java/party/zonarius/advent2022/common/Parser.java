@@ -1,14 +1,24 @@
 package party.zonarius.advent2022.common;
 
+import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public interface Parser<T> {
+
     T parse(String input);
     T parseFile(String path);
+
+    default T parseTestInput() {
+        return parseFile("./test-input");
+    }
+
+    default T parseInput() {
+        return parseFile("./input");
+    }
+
     ParseResult<T> parseResult(ParserInput input);
 
     <R> Parser<R> then(Parser<R> then);
@@ -21,6 +31,7 @@ public interface Parser<T> {
     Parser<T> followedBy(String str);
     Parser<T> followedBy(Parser<?> str);
 
+    Parser<List<T>> star();
     Parser<List<T>> plus();
 
     static <T> Parser<T> create(String name, Function<ParserInput, ParseResult<T>> parser) {
@@ -81,20 +92,27 @@ public interface Parser<T> {
 
     static <T> Parser<T> choice(List<Parser<T>> parsers) {
         return create("Choice %s".formatted(parsers), input -> {
+            ArrayList<ParseResult.Failure> failures = new ArrayList<>();
             for (Parser<T> parser : parsers) {
                 switch (parser.parseResult(input)) {
                     case ParseResult.Success<T> s -> {
                         return s;
                     }
-                    case ParseResult.Failure f -> {}
+                    case ParseResult.Failure f -> failures.add(f);
                 }
             }
-            return ParseResult.failure("No choice matched. Expected one of %s".formatted(parsers), input);
+            return ParseResult.failure("No choice matched. Expected one of %s".formatted(parsers), input, failures);
         });
     }
 
+    @SuppressWarnings("unchecked")
+    static <T> Parser<T> choice(Parser<? extends T> p1, Parser<? extends T> p2) {
+        return choice(List.of((Parser<T>)p1, (Parser<T>)p2));
+    }
+
+    @SafeVarargs
     static <T> Parser<T> choice(Parser<T> ...parsers) {
-        return choice(Arrays.asList(parsers));
+        return choice(List.of(parsers));
     }
 
     static Parser<String> string(String expected) {
@@ -110,6 +128,27 @@ public interface Parser<T> {
     static Parser<String> anyString(int length) {
         return Parser.create("Parsing any string of length %d".formatted(length), input -> {
             return ParseResult.success(input.substring(0, length), input.substring(length));
+        });
+    }
+
+    static Parser<String> untilInclusive(Parser<?> parser) {
+        return untilExclusive(parser).followedBy(parser);
+    }
+
+    static Parser<String> untilExclusive(Parser<?> parser) {
+        return Parser.create("Until Exclusive %s".formatted(parser), input -> {
+            StringBuilder sb = new StringBuilder();
+            boolean done = false;
+            while (!done) {
+                switch (parser.parseResult(input)) {
+                    case ParseResult.Failure ignored -> {
+                        sb.append(input.charAt(0));
+                        input = input.substring(1);
+                    }
+                    case ParseResult.Success<?> ignored -> done = true;
+                }
+            }
+            return ParseResult.success(sb.toString(), input);
         });
     }
 
